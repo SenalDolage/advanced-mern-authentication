@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const ErrorResponse = require("../utils/errorResponse");
 
 exports.register = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -15,10 +16,7 @@ exports.register = async (req, res, next) => {
       user,
     });
   } catch (error) {
-    res.status(500).json({
-      sucess: false,
-      error: error,
-    });
+    next(error);
   }
 };
 
@@ -38,22 +36,13 @@ exports.login = async (req, res, next) => {
           });
         }
       } else {
-        res.status(404).json({
-          sucess: false,
-          error: "User not found",
-        });
+        next(new ErrorResponse("User not found", 401));
       }
     } catch (error) {
-      res.status(500).json({
-        sucess: false,
-        error: error,
-      });
+      next(new ErrorResponse(error.message || "User not found", 500));
     }
   } else {
-    res.status(500).json({
-      sucess: false,
-      error: "Please provide email and password",
-    });
+    next(new ErrorResponse("Please provide email and password", 400));
   }
 };
 

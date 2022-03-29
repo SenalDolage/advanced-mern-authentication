@@ -1,14 +1,17 @@
 require("dotenv").config();
 const express = require("express");
 const connectDb = require("./config/db");
+const errorHandler = require("./middleware/error");
+const PORT = process.env.PORT;
 
 connectDb();
 
 const app = express();
-const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use("/api/auth", require("./routes/auth"));
+
+app.use(errorHandler);
 
 const server = app.listen(PORT, () =>
   console.log(`Server running on port http://localhost:${PORT}/api/auth/`)
