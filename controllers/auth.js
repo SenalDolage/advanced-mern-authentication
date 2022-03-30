@@ -39,8 +39,31 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.forgotpassword = (req, res, next) => {
-  res.send("forgotpassword route");
+exports.forgotpassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return next(new ErrorResponse("Email could not be sent", 404));
+    }
+
+    const resetToken = user.getResetPasswordToken();
+    await user.save();
+
+    const resetUrl = `${process.env.RESET_PWD_URI}/${resetToken}`;
+    const message = `
+    <h1>You have requested a password reset</h1> 
+    <p>Please go to this link to reset your password</p> 
+    <a href=${resetUrl} clicktracking=off>Reset Here</a>
+    `;
+
+    try {
+    } catch (error) {}
+  } catch (error) {
+    next(new ErrorResponse(error.message || "User not found", 500));
+  }
 };
 
 exports.resetpassword = (req, res, next) => {
