@@ -56,11 +56,14 @@ exports.forgotpassword = async (req, res, next) => {
     const message = `
     <h1>You have requested a password reset</h1> 
     <p>Please go to this link to reset your password</p> 
-    <a href=${resetUrl} clicktracking=off>Reset Here</a>
+    <a href=${resetUrl} clicktracking=off>Click here to reset.</a>
     `;
 
     try {
-    } catch (error) {}
+      
+    } catch (error) {
+
+    }
   } catch (error) {
     next(new ErrorResponse(error.message || "User not found", 500));
   }
